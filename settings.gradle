@@ -22,3 +22,8 @@ dependencyResolutionManagement {
 rootProject.name = "AOpenGLKit"
 include ':app'
 include ':openglk_basic'
+//SwiftKit
+include ':SwiftKit'
+project(':SwiftKit').projectDir = new File("D:\\WorkSpace\\GitHub\\SwiftKit")
+include ':SwiftKit:basick'
+
