@@ -14,7 +14,7 @@ import java.nio.FloatBuffer
  * @Date 2024/3/20
  * @Version 1.0
  */
-class Triangle {
+class TriangleEBO {
     //顶点着色器
     private val _strShaderVertex = """
         uniform mat4 mTMatrix;
@@ -40,7 +40,12 @@ class Triangle {
         0.5f, -0.5f, 0f//右下角
     )
 
+    //VBO
     private var _vboIds = IntArray(1)
+
+    //EBO
+    private var _eboIds = IntArray(1)
+    private var _vertexIds = intArrayOf(0, 1, 2)
 
     private val _color = floatArrayOf(0.5f, 0.5f, 0.5f, 1f)
     private var _matrixTranslate = FloatArray(16)
@@ -53,6 +58,9 @@ class Triangle {
         _vertexBuffer = allocateBuffer.asFloatBuffer()
         _vertexBuffer.put(_vertexTriangle)
         _vertexBuffer.position(0)
+
+        val idsBuffer = ByteBuffer.allocateDirect(_vertexIds.size * 4).order(ByteOrder.nativeOrder()).asIntBuffer()
+        idsBuffer.put(_vertexIds).position(0)
 
         Matrix.setIdentityM(_matrixTranslate, 0)
 //        Matrix.translateM(_matrixTranslate, 0, 0.5f, 0f, 0f)
@@ -71,7 +79,17 @@ class Triangle {
         GLES30.glGenBuffers(1, _vboIds, 0)
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, _vboIds[0])
         GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, allocateBuffer.capacity(), allocateBuffer, GLES30.GL_STATIC_DRAW)
+        //unbind
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
+
+        //生成ebo
+        GLES30.glGenBuffers(1, _eboIds, 0)
+        GLES30.glBindBuffer(GLES30.GL_ELEMENT_ARRAY_BUFFER, _eboIds[0])
+        GLES30.glBufferData(GLES30.GL_ELEMENT_ARRAY_BUFFER, idsBuffer.capacity()*4, idsBuffer, GLES30.GL_STATIC_DRAW)
+        //unbind
+        GLES30.glBindBuffer(GLES30.GL_ELEMENT_ARRAY_BUFFER, 0)
+
+
     }
 
     private var _vPosition = 0
@@ -83,6 +101,7 @@ class Triangle {
         GLES30.glUseProgram(_program)
 
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, _vboIds[0])
+        GLES30.glBindBuffer(GLES30.GL_ELEMENT_ARRAY_BUFFER, _eboIds[0])
 
         //将数据传递给shader
         _vPosition = GLES30.glGetAttribLocation(_program, "vPosition")
@@ -96,9 +115,12 @@ class Triangle {
         GLES30.glUniform4fv(_vColor, 1, _color, 0)
 
         //drawArray, 绘制三角形
-        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, _vertexTriangle.size / 3)
+//        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, _vertexTriangle.size / 3)
+        GLES30.glDrawElements(GLES30.GL_TRIANGLES,3,GLES30.GL_UNSIGNED_INT,0)
 
-        GLES30.glDisableVertexAttribArray(_vPosition)
+//        GLES30.glDisableVertexAttribArray(_vPosition)
+        //解绑VBO
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
+        GLES30.glBindBuffer(GLES30.GL_ELEMENT_ARRAY_BUFFER, 0)
     }
 }

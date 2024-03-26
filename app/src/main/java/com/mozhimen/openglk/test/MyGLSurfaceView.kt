@@ -3,7 +3,8 @@ package com.mozhimen.openglk.test
 import android.content.Context
 import android.opengl.GLES30
 import android.opengl.GLSurfaceView
-import com.mozhimen.openglk.basic.mos.Triangle
+import com.mozhimen.openglk.basic.mos.Rectangle
+import com.mozhimen.openglk.basic.mos.TriangleVAO
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -22,10 +23,10 @@ class MyGLSurfaceView(context: Context) : GLSurfaceView(context) {
 }
 
 class MyGLRender : GLSurfaceView.Renderer {
-    private lateinit var _triangle: Triangle
+    private lateinit var _triangle: TriangleVAO
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         GLES30.glClearColor(1.0f, 0.0f, 0.0f, 1f)
-        _triangle = Triangle()
+        _triangle = TriangleVAO()
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
