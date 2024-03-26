@@ -40,6 +40,8 @@ class Triangle {
         0.5f, -0.5f, 0f//右下角
     )
 
+    private var _vboIds = IntArray(1)
+
     private val _color = floatArrayOf(0.5f, 0.5f, 0.5f, 1f)
     private var _matrixTranslate = FloatArray(16)
     private var _vertexBuffer: FloatBuffer
@@ -64,6 +66,12 @@ class Triangle {
         GLES30.glAttachShader(_program, shaderVertex)
         GLES30.glAttachShader(_program, shaderFragment)
         GLES30.glLinkProgram(_program)
+
+        //生成vbo
+        GLES30.glGenBuffers(1, _vboIds, 0)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, _vboIds[0])
+        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, allocateBuffer.capacity(), allocateBuffer, GLES30.GL_STATIC_DRAW)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
     }
 
     private var _vPosition = 0
@@ -74,10 +82,12 @@ class Triangle {
         //使用program
         GLES30.glUseProgram(_program)
 
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, _vboIds[0])
+
         //将数据传递给shader
         _vPosition = GLES30.glGetAttribLocation(_program, "vPosition")
         GLES30.glEnableVertexAttribArray(_vPosition)
-        GLES30.glVertexAttribPointer(_vPosition, 3, GLES30.GL_FLOAT, false, 0, _vertexBuffer)
+        GLES30.glVertexAttribPointer(_vPosition, 3, GLES30.GL_FLOAT, false, 0, 0)
 
         _mTMatrix = GLES30.glGetUniformLocation(_program, "mTMatrix")
         GLES30.glUniformMatrix4fv(_mTMatrix, 1, false, _matrixTranslate, 0)
@@ -89,5 +99,6 @@ class Triangle {
         GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, _vertexTriangle.size / 3)
 
         GLES30.glDisableVertexAttribArray(_vPosition)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
     }
 }
