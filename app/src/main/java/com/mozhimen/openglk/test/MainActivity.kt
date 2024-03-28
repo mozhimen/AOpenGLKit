@@ -10,4 +10,9 @@ class MainActivity : AppCompatActivity() {
         _myGLSurfaceView = MyGLSurfaceView(this)
         setContentView(_myGLSurfaceView)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _myGLSurfaceView.release()
+    }
 }
