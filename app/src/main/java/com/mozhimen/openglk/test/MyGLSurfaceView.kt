@@ -4,6 +4,7 @@ import android.content.Context
 import android.opengl.GLES30
 import android.opengl.GLSurfaceView
 import com.mozhimen.openglk.basic.mos.Rectangle
+import com.mozhimen.openglk.basic.mos.RectangleShader
 import com.mozhimen.openglk.basic.mos.TriangleVAO
 import com.mozhimen.openglk.basic.mos.TriangleVAOOptimize
 import javax.microedition.khronos.egl.EGLConfig
@@ -30,10 +31,10 @@ class MyGLSurfaceView(context: Context) : GLSurfaceView(context) {
 }
 
 class MyGLRender : GLSurfaceView.Renderer {
-    private lateinit var _triangle: TriangleVAOOptimize
+    private lateinit var _triangle: RectangleShader
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         GLES30.glClearColor(1.0f, 0.0f, 0.0f, 1f)
-        _triangle = TriangleVAOOptimize()
+        _triangle = RectangleShader()
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
@@ -46,6 +47,6 @@ class MyGLRender : GLSurfaceView.Renderer {
     }
 
     fun release(){
-        _triangle.release()
+//        _triangle.release()
     }
 }
