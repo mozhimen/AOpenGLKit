@@ -1,12 +1,9 @@
-package com.mozhimen.openglk.test
+package com.mozhimen.openglk.test.widgets
 
 import android.content.Context
 import android.opengl.GLES30
 import android.opengl.GLSurfaceView
-import com.mozhimen.openglk.basic.mos.Rectangle
-import com.mozhimen.openglk.basic.mos.RectangleShader
-import com.mozhimen.openglk.basic.mos.TriangleVAO
-import com.mozhimen.openglk.basic.mos.TriangleVAOOptimize
+import com.mozhimen.openglk.test.mos.RectangleShader
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 

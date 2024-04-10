@@ -1,4 +1,4 @@
-package com.mozhimen.openglk.basic.mos
+package com.mozhimen.openglk.test.mos
 
 import android.opengl.GLES30
 import android.opengl.Matrix
@@ -14,7 +14,7 @@ import java.nio.FloatBuffer
  * @Date 2024/3/20
  * @Version 1.0
  */
-class TriangleVAOOptimize {
+class TriangleEBO {
     //顶点着色器
     private val _strShaderVertex = """
         uniform mat4 mTMatrix;
@@ -42,17 +42,15 @@ class TriangleVAOOptimize {
 
     //VBO
     private var _vboIds = IntArray(1)
-    private var _vaoIds = IntArray(1)
 
+    //EBO
+    private var _eboIds = IntArray(1)
     private var _vertexIds = intArrayOf(0, 1, 2)
 
     private val _color = floatArrayOf(0.5f, 0.5f, 0.5f, 1f)
     private var _matrixTranslate = FloatArray(16)
     private var _vertexBuffer: FloatBuffer
     private var _program: Int = 0
-    private var _vPosition = 0
-    private var _vColor = 0
-    private var _mTMatrix = 0
 
     init {
         val allocateBuffer = ByteBuffer.allocateDirect(_vertexTriangle.size * 4)
@@ -75,61 +73,54 @@ class TriangleVAOOptimize {
         _program = GLES30.glCreateProgram()
         GLES30.glAttachShader(_program, shaderVertex)
         GLES30.glAttachShader(_program, shaderFragment)
-
         GLES30.glLinkProgram(_program)
 
-        //释放shader
-        GLES30.glDeleteShader(shaderVertex)
-        GLES30.glDeleteShader(shaderFragment)
-
-        _mTMatrix = GLES30.glGetUniformLocation(_program, "mTMatrix")
-        _vColor = GLES30.glGetUniformLocation(_program, "vColor")
-        _vPosition = GLES30.glGetAttribLocation(_program, "vPosition")
-
-        //vao
-        GLES30.glGenVertexArrays(1, _vaoIds, 0)
-        GLES30.glBindVertexArray(_vaoIds[0])
-
-        //创建vao
         //生成vbo
         GLES30.glGenBuffers(1, _vboIds, 0)
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, _vboIds[0])
         GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, allocateBuffer.capacity(), allocateBuffer, GLES30.GL_STATIC_DRAW)
-
-        //将数据传递给shader
-        GLES30.glEnableVertexAttribArray(_vPosition)
-        GLES30.glVertexAttribPointer(_vPosition, 3, GLES30.GL_FLOAT, false, 0, 0)
-
         //unbind
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
-        GLES30.glBindVertexArray(0)
+
+        //生成ebo
+        GLES30.glGenBuffers(1, _eboIds, 0)
+        GLES30.glBindBuffer(GLES30.GL_ELEMENT_ARRAY_BUFFER, _eboIds[0])
+        GLES30.glBufferData(GLES30.GL_ELEMENT_ARRAY_BUFFER, idsBuffer.capacity()*4, idsBuffer, GLES30.GL_STATIC_DRAW)
+        //unbind
+        GLES30.glBindBuffer(GLES30.GL_ELEMENT_ARRAY_BUFFER, 0)
+
+
     }
+
+    private var _vPosition = 0
+    private var _vColor = 0
+    private var _mTMatrix = 0
 
     fun draw() {
         //使用program
         GLES30.glUseProgram(_program)
 
-        GLES30.glBindVertexArray(_vaoIds[0])
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, _vboIds[0])
+        GLES30.glBindBuffer(GLES30.GL_ELEMENT_ARRAY_BUFFER, _eboIds[0])
 
+        //将数据传递给shader
+        _vPosition = GLES30.glGetAttribLocation(_program, "vPosition")
+        GLES30.glEnableVertexAttribArray(_vPosition)
+        GLES30.glVertexAttribPointer(_vPosition, 3, GLES30.GL_FLOAT, false, 0, 0)
+
+        _mTMatrix = GLES30.glGetUniformLocation(_program, "mTMatrix")
         GLES30.glUniformMatrix4fv(_mTMatrix, 1, false, _matrixTranslate, 0)
 
+        _vColor = GLES30.glGetUniformLocation(_program, "vColor")
         GLES30.glUniform4fv(_vColor, 1, _color, 0)
 
         //drawArray, 绘制三角形
-        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, _vertexTriangle.size / 3)
+//        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, _vertexTriangle.size / 3)
+        GLES30.glDrawElements(GLES30.GL_TRIANGLES,3,GLES30.GL_UNSIGNED_INT,0)
 
+//        GLES30.glDisableVertexAttribArray(_vPosition)
         //解绑VBO
-//        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
-        GLES30.glBindVertexArray(0)
-    }
-
-    fun release() {
-        //vbo
-        GLES30.glDeleteBuffers(1, _vboIds, 0)
-        //vao
-        GLES30.glDeleteVertexArrays(1,_vaoIds,0)
-
-        //program
-        GLES30.glDeleteProgram(_program)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
+        GLES30.glBindBuffer(GLES30.GL_ELEMENT_ARRAY_BUFFER, 0)
     }
 }

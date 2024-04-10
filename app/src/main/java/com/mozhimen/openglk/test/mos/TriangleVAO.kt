@@ -1,4 +1,4 @@
-package com.mozhimen.openglk.basic.mos
+package com.mozhimen.openglk.test.mos
 
 import android.opengl.GLES30
 import android.opengl.Matrix
