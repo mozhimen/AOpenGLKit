@@ -3,7 +3,6 @@ package com.mozhimen.openglk.test.mos
 import android.graphics.Bitmap
 import android.opengl.GLES30
 import android.opengl.GLUtils
-import android.opengl.Matrix
 import com.mozhimen.openglk.basic.utils.GLES30Util
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -16,15 +15,15 @@ import java.nio.FloatBuffer
  * @Date 2024/4/14 0:10
  * @Version 1.0
  */
-class Texture(bitmap: Bitmap) {
+class TextureMVPMatrix(bitmap: Bitmap) {
     //顶点着色器
     private val _strShaderVertex = """
-        uniform mat4 uTMatrix;
+        uniform mat4 uMVPMatrix;
         attribute vec4 aPosition;
         attribute vec2 aTexCoord;
         varying vec2 vTexCoord; 
         void main() {
-            gl_Position = uTMatrix * aPosition;
+            gl_Position = uMVPMatrix * aPosition;
             vTexCoord = aTexCoord;
         }
     """.trimIndent()
@@ -51,13 +50,12 @@ class Texture(bitmap: Bitmap) {
 
     //VBO
     private var _vboIds = IntArray(1)
-    private var _matrixTranslate = FloatArray(16)
 
     private var _vertexBuffer: FloatBuffer
     private var _program: Int = 0
     private var _aPosition = 0
     private var _aTexCoord = 0
-    private var _mTMatrix = 0
+    private var _mvpMatrix = 0
     private var _uSampler = 0
     private var _textureId = 0
 
@@ -88,8 +86,6 @@ class Texture(bitmap: Bitmap) {
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, _vboIds[0])
         GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, allocateBuffer.capacity(), allocateBuffer, GLES30.GL_STATIC_DRAW)
 
-        Matrix.setIdentityM(_matrixTranslate, 0)
-
         //将数据传递给shader
         _aPosition = GLES30.glGetAttribLocation(_program, "aPosition")
         GLES30.glEnableVertexAttribArray(_aPosition)
@@ -97,34 +93,12 @@ class Texture(bitmap: Bitmap) {
         _aTexCoord = GLES30.glGetAttribLocation(_program, "aTexCoord")
         GLES30.glEnableVertexAttribArray(_aTexCoord)
 
-        _mTMatrix = GLES30.glGetUniformLocation(_program, "uTMatrix")
+        _mvpMatrix = GLES30.glGetUniformLocation(_program, "uMVPMatrix")
         _uSampler = GLES30.glGetUniformLocation(_program, "uSampler")
 
         GLES30.glVertexAttribPointer(_aPosition, 3, GLES30.GL_FLOAT, false, 0, 0)
 
         //unbind
-        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
-    }
-
-
-    fun draw() {
-        //使用program
-        GLES30.glUseProgram(_program)
-        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, _vboIds[0])
-
-        GLES30.glVertexAttribPointer(_aPosition, 3, GLES30.GL_FLOAT, false, 5 * Float.SIZE_BYTES, 0)
-        GLES30.glVertexAttribPointer(_aTexCoord, 2, GLES30.GL_FLOAT, false, 5 * Float.SIZE_BYTES, 3 * Float.SIZE_BYTES)
-
-        GLES30.glUniformMatrix4fv(_mTMatrix, 1, false, _matrixTranslate, 0)
-
-        GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, _textureId)
-        GLES30.glUniform1i(_uSampler, 0)
-
-        //drawArray, 绘制三角形
-        GLES30.glDrawArrays(GLES30.GL_TRIANGLE_STRIP, 0, 4)
-
-        //解绑VBO
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
     }
 
@@ -136,7 +110,7 @@ class Texture(bitmap: Bitmap) {
         GLES30.glVertexAttribPointer(_aPosition, 3, GLES30.GL_FLOAT, false, 5 * Float.SIZE_BYTES, 0)
         GLES30.glVertexAttribPointer(_aTexCoord, 2, GLES30.GL_FLOAT, false, 5 * Float.SIZE_BYTES, 3 * Float.SIZE_BYTES)
 
-        GLES30.glUniformMatrix4fv(_mTMatrix, 1, false, mvpM, 0)
+        GLES30.glUniformMatrix4fv(_mvpMatrix, 1, false, mvpM, 0)
 
         GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
         GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, _textureId)
