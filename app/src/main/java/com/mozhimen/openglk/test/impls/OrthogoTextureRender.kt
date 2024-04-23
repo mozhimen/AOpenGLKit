@@ -22,7 +22,6 @@ import javax.microedition.khronos.opengles.GL10
  */
 class OrthogoTextureRender(private val _context: Context) : GLSurfaceView.Renderer {
 
-    private lateinit var _triangle: TextureMVPMatrix
     private var _bitmap: Bitmap
     private var _bitmapWidth = 0
     private var _bitmapHeight = 0
