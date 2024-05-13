@@ -16,9 +16,9 @@ import com.mozhimen.basick.elemk.commons.IAA_Listener
  */
 class TouchGLSurfaceView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : GLSurfaceView(context, attrs) {
 
-    init {
-        setEGLContextClientVersion(3)
-    }
+//    init {
+//        setEGLContextClientVersion(3)
+//    }
 
     //////////////////////////////////////////////////
 
