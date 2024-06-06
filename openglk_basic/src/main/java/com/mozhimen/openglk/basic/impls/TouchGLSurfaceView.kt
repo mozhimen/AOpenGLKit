@@ -24,7 +24,9 @@ class TouchGLSurfaceView @JvmOverloads constructor(context: Context, attrs: Attr
 
     private var _touchListener: IAA_Listener<Float>? = null
     private var _sceneWidth = 720// 宽
+    val sceneWidth: Int = _sceneWidth
     private var _sceneHeight = 1280// 高
+    val sceneHeight: Int = _sceneHeight
     private var _previousY = 0f //上次的触控位置Y坐标
     private var _previousX = 0f //上次的触控位置X坐标
 
