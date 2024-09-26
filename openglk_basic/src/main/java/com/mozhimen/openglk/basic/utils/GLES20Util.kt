@@ -1,9 +1,9 @@
 package com.mozhimen.openglk.basic.utils
 
 import android.opengl.GLES20
-import com.mozhimen.basick.utilk.android.util.UtilKLogWrapper
-import com.mozhimen.basick.utilk.commons.IUtilK
-import com.mozhimen.basick.utilk.kotlin.UtilKStrAsset
+import com.mozhimen.kotlin.utilk.android.util.UtilKLogWrapper
+import com.mozhimen.kotlin.utilk.commons.IUtilK
+import com.mozhimen.kotlin.utilk.kotlin.UtilKStrAsset
 
 /**
  * @ClassName GLES20Util
@@ -53,8 +53,8 @@ object GLES20Util : IUtilK {
 
     @JvmStatic
     fun createGlProgramByRes(vert: String, frag: String): Int? {
-        val vertexSource = UtilKStrAsset.strAssetName2strOfStream(vert)
-        val fragmentSource = UtilKStrAsset.strAssetName2strOfStream(frag)
+        val vertexSource = UtilKStrAsset.strAssetName2str_ofStream(vert)
+        val fragmentSource = UtilKStrAsset.strAssetName2str_ofStream(frag)
         if (vertexSource != null && fragmentSource != null)
             createGlProgram(vertexSource, fragmentSource)
         return null

@@ -1,8 +1,8 @@
 package com.mozhimen.openglk.basic.utils
 
 import android.opengl.Matrix
-import com.mozhimen.basick.elemk.android.opengl.annors.AMatrixType
-import com.mozhimen.basick.lintk.annors.ADescription
+import com.mozhimen.kotlin.elemk.android.opengl.annors.AMatrixType
+import com.mozhimen.kotlin.lintk.annors.ADescription
 
 /**
  * @ClassName MatrixUtil
