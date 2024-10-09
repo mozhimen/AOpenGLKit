@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.opengl.GLES30
 import android.opengl.GLSurfaceView
-import com.mozhimen.basick.utilk.android.graphics.UtilKBitmapFactory
+import com.mozhimen.kotlin.utilk.android.graphics.UtilKBitmapFactory
 import com.mozhimen.openglk.test.R
 import com.mozhimen.openglk.test.mos.Texture
 import javax.microedition.khronos.egl.EGLConfig

@@ -53,8 +53,8 @@ object GLES20Util : IUtilK {
 
     @JvmStatic
     fun createGlProgramByRes(vert: String, frag: String): Int? {
-        val vertexSource = UtilKStrAsset.strAssetName2str_ofStream(vert)
-        val fragmentSource = UtilKStrAsset.strAssetName2str_ofStream(frag)
+        val vertexSource = UtilKStrAsset.strAssetName2str_use_ofStream(vert)
+        val fragmentSource = UtilKStrAsset.strAssetName2str_use_ofStream(frag)
         if (vertexSource != null && fragmentSource != null)
             createGlProgram(vertexSource, fragmentSource)
         return null
