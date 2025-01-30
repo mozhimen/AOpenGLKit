@@ -13,7 +13,7 @@ import com.mozhimen.kotlin.lintk.annors.ADescription
  */
 object MatrixUtil {
     @JvmStatic
-    fun get_ofOriginal(): FloatArray =
+    fun get_original(): FloatArray =
         floatArrayOf(
             1f, 0f, 0f, 0f,
             0f, 1f, 0f, 0f,

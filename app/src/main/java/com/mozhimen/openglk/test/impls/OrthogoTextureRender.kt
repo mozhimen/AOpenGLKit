@@ -6,9 +6,8 @@ import android.graphics.BitmapFactory
 import android.opengl.GLES30
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
-import com.mozhimen.basick.utilk.android.graphics.UtilKBitmapFactory
+import com.mozhimen.kotlin.utilk.android.graphics.UtilKBitmapFactory
 import com.mozhimen.openglk.test.R
-import com.mozhimen.openglk.test.mos.Texture
 import com.mozhimen.openglk.test.mos.TextureMVPMatrix
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -22,6 +21,7 @@ import javax.microedition.khronos.opengles.GL10
  */
 class OrthogoTextureRender(private val _context: Context) : GLSurfaceView.Renderer {
 
+    private lateinit var _triangle: TextureMVPMatrix
     private var _bitmap: Bitmap
     private var _bitmapWidth = 0
     private var _bitmapHeight = 0
